@@ -1,7 +1,7 @@
 {
   "domain": "chargepoint",
   "name": "ChargePoint (Peblar) Local API",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "documentation": "https://github.com/LStuyck/ha-chargepoint-peblar",
   "issue_tracker": "https://github.com/LStuyck/ha-chargepoint-peblar/issues",
   "codeowners": [
