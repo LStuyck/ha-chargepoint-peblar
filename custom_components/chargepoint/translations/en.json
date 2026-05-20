@@ -1,0 +1,47 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to your ChargePoint charger",
+        "description": "Enter the local IP and the 64-character API token from the charger's advanced settings page. The local REST API must be enabled.",
+        "data": {
+          "host": "Host or IP",
+          "api_token": "API token"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot reach the charger at that address.",
+      "invalid_auth": "The API token was rejected.",
+      "no_serial": "Connected, but the charger did not report a serial number.",
+      "unknown": "Unexpected error talking to the charger."
+    },
+    "abort": {
+      "already_configured": "This charger is already configured."
+    }
+  },
+  "services": {
+    "authorize_charge_session": {
+      "name": "Authorize charge session",
+      "description": "(De)authorize a charge session on the charger using a token from the local list.",
+      "fields": {
+        "device_id": {
+          "name": "Device",
+          "description": "The ChargePoint device to target."
+        },
+        "config_entry_id": {
+          "name": "Config entry ID",
+          "description": "Advanced - target a config entry by its ID instead of by device."
+        },
+        "method": {
+          "name": "Method",
+          "description": "Authorization method (e.g. 'Rfid')."
+        },
+        "token": {
+          "name": "Token",
+          "description": "The token identifier to authorize."
+        }
+      }
+    }
+  }
+}

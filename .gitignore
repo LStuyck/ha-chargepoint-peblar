@@ -1,0 +1,17 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Local env / IDE
+.venv/
+venv/
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# OneDrive sync artefacts
+*.tmp
+~$*

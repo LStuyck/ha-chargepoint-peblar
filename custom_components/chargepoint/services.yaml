@@ -1,0 +1,36 @@
+authorize_charge_session:
+  name: Authorize charge session
+  description: >-
+    (De)authorize a charge session on the charger using a token from the
+    local list. The charger replies 202 Accepted and processes the request
+    asynchronously - monitor sensor state for the result. Requires the
+    charger's local REST API to be in ReadWrite mode.
+  fields:
+    device_id:
+      name: Device
+      description: The ChargePoint device to target. Either this or config_entry_id.
+      required: false
+      selector:
+        device:
+          integration: chargepoint
+    config_entry_id:
+      name: Config entry ID
+      description: >-
+        Advanced - target a config entry by its ID instead of by device.
+      required: false
+      selector:
+        text:
+    method:
+      name: Method
+      description: Authorization method (e.g. "Rfid").
+      required: true
+      example: Rfid
+      selector:
+        text:
+    token:
+      name: Token
+      description: The token identifier to authorize.
+      required: true
+      example: ABCDEFABCDEF
+      selector:
+        text:
