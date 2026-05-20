@@ -1,9 +1,7 @@
 {
   "domain": "chargepoint",
   "name": "ChargePoint (Peblar) Local API",
-  "codeowners": [
-    "@LStuyck"
-  ],
+  "codeowners": ["@LStuyck"],
   "config_flow": true,
   "dependencies": [],
   "documentation": "https://github.com/LStuyck/ha-chargepoint-peblar",
