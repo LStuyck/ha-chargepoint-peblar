@@ -1,15 +1,15 @@
 {
   "domain": "chargepoint",
   "name": "ChargePoint (Peblar) Local API",
-  "version": "0.1.1",
-  "documentation": "https://github.com/LStuyck/ha-chargepoint-peblar",
-  "issue_tracker": "https://github.com/LStuyck/ha-chargepoint-peblar/issues",
   "codeowners": [
     "@LStuyck"
   ],
   "config_flow": true,
-  "iot_class": "local_polling",
+  "dependencies": [],
+  "documentation": "https://github.com/LStuyck/ha-chargepoint-peblar",
   "integration_type": "device",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/LStuyck/ha-chargepoint-peblar/issues",
   "requirements": [],
-  "dependencies": []
+  "version": "0.1.2"
 }
