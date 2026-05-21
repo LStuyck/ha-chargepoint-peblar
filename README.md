@@ -33,7 +33,7 @@ account required.
 
 **Services**
 
-- `chargepoint.authorize_charge_session` — (de)authorize a charge session
+- `chargepoint_peblar.authorize_charge_session` — (de)authorize a charge session
   using a token from the charger's local list. Fields: `device_id`,
   `method` (e.g. `Rfid`), `token`.
 
@@ -58,7 +58,7 @@ account required.
 
 ## Manual install
 
-1. Copy the `custom_components/chargepoint/` folder into your HA config's
+1. Copy the `custom_components/chargepoint_peblar/` folder into your HA config's
    `custom_components/` directory.
 2. Restart Home Assistant.
 3. Add the integration via **Settings → Devices & Services**.
@@ -76,7 +76,7 @@ hitting the same charger.
   integration.
 - Energy is reported in mWh by the API and converted to kWh. If your
   charger reports energy in a different unit, the conversion is in
-  `custom_components/chargepoint/sensor.py` (the `_mwh_to_kwh` helper) —
+  `custom_components/chargepoint_peblar/sensor.py` (the `_mwh_to_kwh` helper) —
   adjust the divisor as needed.
 
 ## Troubleshooting

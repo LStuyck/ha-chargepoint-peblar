@@ -1,7 +1,9 @@
 {
-  "domain": "chargepoint",
+  "domain": "chargepoint_peblar",
   "name": "ChargePoint (Peblar) Local API",
-  "codeowners": ["@LStuyck"],
+  "codeowners": [
+    "@LStuyck"
+  ],
   "config_flow": true,
   "dependencies": [],
   "documentation": "https://github.com/LStuyck/ha-chargepoint-peblar",
@@ -9,5 +11,5 @@
   "iot_class": "local_polling",
   "issue_tracker": "https://github.com/LStuyck/ha-chargepoint-peblar/issues",
   "requirements": [],
-  "version": "0.1.2"
+  "version": "0.2.0"
 }

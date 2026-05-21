@@ -12,7 +12,7 @@ authorize_charge_session:
       required: false
       selector:
         device:
-          integration: chargepoint
+          integration: chargepoint_peblar
     config_entry_id:
       name: Config entry ID
       description: >-

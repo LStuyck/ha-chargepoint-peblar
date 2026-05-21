@@ -161,4 +161,4 @@ class ChargePointBinarySensor(ChargePointEntity, BinarySensorEntity):
     @property
     def is_on(self) -> bool | None:
         """Return the current binary state."""
-        return self.entity_description.value_fn(self._payload())
+     

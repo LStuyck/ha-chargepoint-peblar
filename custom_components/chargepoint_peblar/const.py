@@ -4,7 +4,7 @@ from __future__ import annotations
 from datetime import timedelta
 from typing import Final
 
-DOMAIN: Final = "chargepoint"
+DOMAIN: Final = "chargepoint_peblar"
 MANUFACTURER: Final = "ChargePoint"
 
 # Config entry keys
