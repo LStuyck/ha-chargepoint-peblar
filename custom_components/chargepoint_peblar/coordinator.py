@@ -8,7 +8,11 @@ from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from homeassistant.exceptions import ConfigEntryAuthFailed
+from homeassistant.helpers.update_coordinator import (
+    DataUpdateCoordinator,
+    UpdateFailed,
+)
 
 from .api import (
     ChargePointApiError,
@@ -38,6 +42,7 @@ class ChargePointCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         client: ChargePointClient,
         entry: ConfigEntry,
     ) -> None:
+        """Initialise the coordinator."""
         self.client = client
         self.entry = entry
         super().__init__(
@@ -51,8 +56,8 @@ class ChargePointCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         """Fetch the four resources in parallel.
 
         /health is included so HA picks up runtime AccessMode changes; it
-        is unauthenticated and cheap. Total of 4 GETs per cycle is well
-        below the 5 req/s shared rate limit.
+        is unauthenticated and cheap. Four GETs per cycle stay well below
+        the charger's 5 req/s shared rate limit.
         """
         try:
             system, evinterface, meter, health = await asyncio.gather(
@@ -62,7 +67,10 @@ class ChargePointCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 self.client.async_get_health(),
             )
         except ChargePointAuthError as err:
-            raise UpdateFailed(f"Authentication failed: {err}") from err
+            # Triggers the reauth flow on the config entry. The user is
+            # prompted to enter a new token; on success the entry is
+            # reloaded with the new credentials.
+            raise ConfigEntryAuthFailed(f"Authentication failed: {err}") from err
         except ChargePointRateLimitError as err:
             raise UpdateFailed(f"Rate limited by charger: {err}") from err
         except ChargePointConnectionError as err:

@@ -8,16 +8,25 @@
           "host": "Host or IP",
           "api_token": "API token"
         }
+      },
+      "reauth_confirm": {
+        "title": "Re-authenticate with the charger",
+        "description": "The API token for {host} is no longer accepted. Generate a new token in the charger's advanced settings and paste it here.",
+        "data": {
+          "api_token": "API token"
+        }
       }
     },
     "error": {
       "cannot_connect": "Cannot reach the charger at that address.",
       "invalid_auth": "The API token was rejected.",
       "no_serial": "Connected, but the charger did not report a serial number.",
+      "wrong_device": "Connected, but the serial number does not match the original device. Refusing to silently re-point this entry at a different charger.",
       "unknown": "Unexpected error talking to the charger."
     },
     "abort": {
-      "already_configured": "This charger is already configured."
+      "already_configured": "This charger is already configured.",
+      "reauth_successful": "Re-authentication was successful."
     }
   },
   "services": {
@@ -42,6 +51,12 @@
           "description": "The token identifier to authorize."
         }
       }
+    }
+  },
+  "issues": {
+    "readonly_access": {
+      "title": "Charger API is in ReadOnly mode",
+      "description": "The charger at {host} ({title}) reports its local REST API is in ReadOnly mode, so the integration cannot create the Number, Switch, or authorize service entities. To enable these, open the charger's web UI, go to advanced settings, switch the local REST API to ReadWrite, then reload this integration. See the linked documentation for screenshots."
     }
   }
 }

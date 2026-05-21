@@ -1,0 +1,66 @@
+name: Bug report
+description: Report something that does not work as expected.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug.
+        Please attach the diagnostics download (Settings → Devices & Services →
+        ChargePoint card → ⋮ → Download diagnostics) — it's the fastest way to
+        diagnose the issue. The API token is redacted automatically.
+  - type: input
+    id: integration_version
+    attributes:
+      label: Integration version
+      description: As shown on the HACS card or at the bottom of the device page.
+      placeholder: "1.0.3"
+    validations:
+      required: true
+  - type: input
+    id: ha_version
+    attributes:
+      label: Home Assistant version
+      placeholder: "2026.5.3"
+    validations:
+      required: true
+  - type: input
+    id: firmware_version
+    attributes:
+      label: Charger firmware version
+      description: Found in the charger's web UI, or in the FirmwareVersion sensor.
+      placeholder: "1.8.0+1+CHARGEPOINT-1"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe the bug. Include what you expected vs. what you observed.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: A numbered list of steps that reliably produces the bug.
+      placeholder: |
+        1. Plug in vehicle
+        2. Open Settings → Devices & Services → ChargePoint
+        3. Observe that the Charging sensor shows ...
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log lines
+      description: |
+        Enable debug logging (integration page → ⋮ → Enable debug logging),
+        reproduce, then paste anything mentioning chargepoint_peblar.
+      render: shell
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics file
+      description: |
+        Drag the downloaded JSON here, or paste the `coordinator.data` block.
+        The API token is redacted automatically.
+      render: json

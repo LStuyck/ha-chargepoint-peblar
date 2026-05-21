@@ -15,3 +15,11 @@ venv/
 # OneDrive sync artefacts
 *.tmp
 ~$*
+
+# Ruff cache
+.ruff_cache/
+
+# Pytest cache (when tests are added later)
+.pytest_cache/
+.coverage
+htmlcov/
