@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
@@ -26,6 +27,8 @@ from .const import (
 )
 from .coordinator import ChargePointCoordinator
 from .entity import ChargePointEntity
+
+_LOGGER = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -131,13 +134,31 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up binary sensors for a config entry."""
+    """Set up binary sensors for a config entry.
+
+    Some firmware variants (notably ChargePoint-branded Peblar) do not
+    expose certain fields. When a description's source field is missing
+    from the data at setup, skip that entity to avoid permanently-Unknown
+    entries in the UI.
+    """
     coordinator: ChargePointCoordinator = hass.data[DOMAIN][entry.entry_id][
         RUNTIME_COORDINATOR
     ]
+    evinterface = coordinator.data.get(DATA_EVINTERFACE, {}) or {}
+
+    descriptions: list[ChargePointBinarySensorEntityDescription] = []
+    for desc in BINARY_SENSORS:
+        if desc.key == "cable_locked" and "LockState" not in evinterface:
+            _LOGGER.info(
+                "Charger firmware does not report LockState; "
+                "skipping 'Cable locked' binary sensor"
+            )
+            continue
+        descriptions.append(desc)
+
     async_add_entities(
         ChargePointBinarySensor(coordinator, description)
-        for description in BINARY_SENSORS
+        for description in descriptions
     )
 
 

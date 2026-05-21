@@ -60,19 +60,19 @@ def _ma_to_a(raw: Any) -> float | None:
         return None
 
 
-def _mwh_to_kwh(raw: Any) -> float | None:
-    """Convert milliwatt-hours to kilowatt-hours.
+def _wh_to_kwh(raw: Any) -> float | None:
+    """Convert watt-hours to kilowatt-hours.
 
-    NOTE on units: the OpenAPI spec doesn't explicitly document the unit of
-    EnergyTotal / EnergySession. Sample values (EnergySession ~= 2.67e6 with
-    PowerTotal ~= 2348 W) strongly imply mWh, which gives realistic kWh
-    figures. If your charger reports values 1000x too low or 1000x too high,
-    adjust the divisor here.
+    Empirically observed (via diagnostics from a 1.8.0+1+CHARGEPOINT-1
+    firmware): EnergyTotal=406142 ≈ 406 kWh lifetime, EnergySession=7294
+    ≈ 7.3 kWh per session — both consistent with Wh as the raw unit.
+    If your charger reports values 1000x too high, your firmware uses
+    mWh — change the divisor below to 1_000_000.
     """
     if raw is None:
         return None
     try:
-        return round(float(raw) / 1_000_000.0, 3)
+        return round(float(raw) / 1000.0, 3)
     except (TypeError, ValueError):
         return None
 
@@ -86,6 +86,23 @@ def _passthrough(key: str) -> Callable[[dict[str, Any]], Any]:
     return _fn
 
 
+def _passthrough_any(*keys: str) -> Callable[[dict[str, Any]], Any]:
+    """Return a value_fn that returns the first non-None value among keys.
+
+    Used to tolerate firmware variants that disagree on field casing
+    (e.g. WlanSignalStrength vs WLANSignalStrength).
+    """
+
+    def _fn(payload: dict[str, Any]) -> Any:
+        for k in keys:
+            v = payload.get(k)
+            if v is not None:
+                return v
+        return None
+
+    return _fn
+
+
 def _ma_from(key: str) -> Callable[[dict[str, Any]], Any]:
     def _fn(payload: dict[str, Any]) -> Any:
         return _ma_to_a(payload.get(key))
@@ -93,9 +110,9 @@ def _ma_from(key: str) -> Callable[[dict[str, Any]], Any]:
     return _fn
 
 
-def _mwh_from(key: str) -> Callable[[dict[str, Any]], Any]:
+def _wh_from(key: str) -> Callable[[dict[str, Any]], Any]:
     def _fn(payload: dict[str, Any]) -> Any:
-        return _mwh_to_kwh(payload.get(key))
+        return _wh_to_kwh(payload.get(key))
 
     return _fn
 
@@ -133,7 +150,7 @@ def _warning_codes_attrs(payload: dict[str, Any]) -> dict[str, Any]:
     return {"codes": payload.get("ActiveWarningCodes") or []}
 
 
-# --- Description tables -----------------------------------------------------
+# --- Description tables ---------------------------------------------------
 
 EVINTERFACE_SENSORS: tuple[ChargePointSensorEntityDescription, ...] = (
     ChargePointSensorEntityDescription(
@@ -232,7 +249,7 @@ METER_SENSORS: tuple[ChargePointSensorEntityDescription, ...] = (
         key="energy_total",
         name="Energy total",
         source=DATA_METER,
-        value_fn=_mwh_from("EnergyTotal"),
+        value_fn=_wh_from("EnergyTotal"),
         device_class=SensorDeviceClass.ENERGY,
         state_class=SensorStateClass.TOTAL_INCREASING,
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
@@ -242,7 +259,7 @@ METER_SENSORS: tuple[ChargePointSensorEntityDescription, ...] = (
         key="energy_session",
         name="Energy session",
         source=DATA_METER,
-        value_fn=_mwh_from("EnergySession"),
+        value_fn=_wh_from("EnergySession"),
         device_class=SensorDeviceClass.ENERGY,
         state_class=SensorStateClass.TOTAL_INCREASING,
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
@@ -256,7 +273,8 @@ SYSTEM_SENSORS: tuple[ChargePointSensorEntityDescription, ...] = (
         key="wlan_signal_strength",
         name="WLAN signal strength",
         source=DATA_SYSTEM,
-        value_fn=_passthrough("WLANSignalStrength"),
+        # Firmware variants disagree on capitalisation; try both.
+        value_fn=_passthrough_any("WlanSignalStrength", "WLANSignalStrength"),
         device_class=SensorDeviceClass.SIGNAL_STRENGTH,
         state_class=SensorStateClass.MEASUREMENT,
         native_unit_of_measurement=SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
