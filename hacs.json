@@ -1,3 +1,5 @@
 {
-  "name": "ChargePoint (Peblar) Local API"
+  "name": "ChargePoint (Peblar) Local API",
+  "homeassistant": "2026.1.0",
+  "render_readme": true
 }
