@@ -1,0 +1,31 @@
+# Project metadata + tool config. Ruff is the only tool wired up here;
+# the integration itself is consumed by Home Assistant via manifest.json,
+# so no setuptools / build-backend block is needed.
+
+[tool.ruff]
+line-length = 88
+target-version = "py313"
+
+[tool.ruff.lint]
+# A small but useful HA-flavoured rule selection. Mirrors a subset of
+# what Home Assistant core enforces. Add or remove as you like.
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # Pyflakes
+    "I",    # isort (import sorting)
+    "UP",   # pyupgrade
+    "B",    # flake8-bugbear
+    "SIM",  # flake8-simplify
+    "RUF",  # ruff-specific rules
+]
+ignore = [
+    # async-method-call-on-coroutine flag — too noisy for HA coordinator
+    # subclasses where async_request_refresh is intentionally awaited.
+    "RUF006",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Tests and brand-icon generator (if added later) don't need to follow
+# every style rule.
+"tests/*" = ["S101"]

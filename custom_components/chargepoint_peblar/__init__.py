@@ -1,4 +1,5 @@
 """The ChargePoint (Peblar) local API integration."""
+
 from __future__ import annotations
 
 import logging

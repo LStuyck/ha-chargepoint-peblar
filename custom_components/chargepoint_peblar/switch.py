@@ -1,4 +1,5 @@
 """Switch entity for the Force1Phase setting."""
+
 from __future__ import annotations
 
 import logging
@@ -35,9 +36,7 @@ async def async_setup_entry(
 
     system: dict[str, Any] = coordinator.data.get(DATA_SYSTEM, {}) or {}
     if not system.get("Force1PhaseAllowed"):
-        _LOGGER.info(
-            "Charger reports Force1PhaseAllowed=False; not adding the switch"
-        )
+        _LOGGER.info("Charger reports Force1PhaseAllowed=False; not adding the switch")
         return
 
     async_add_entities([ChargePointForce1PhaseSwitch(coordinator)])
@@ -77,7 +76,5 @@ class ChargePointForce1PhaseSwitch(ChargePointEntity, SwitchEntity):
                 {"Force1Phase": value}
             )
         except ChargePointApiError as err:
-            raise HomeAssistantError(
-                f"Failed to set Force1Phase: {err}"
-            ) from err
+            raise HomeAssistantError(f"Failed to set Force1Phase: {err}") from err
         await self.coordinator.async_request_refresh()

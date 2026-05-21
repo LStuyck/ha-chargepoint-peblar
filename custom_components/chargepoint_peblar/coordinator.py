@@ -1,4 +1,5 @@
 """DataUpdateCoordinator for the ChargePoint (Peblar) local API."""
+
 from __future__ import annotations
 
 import asyncio

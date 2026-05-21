@@ -1,4 +1,5 @@
 """Sensor entities for the ChargePoint (Peblar) local API integration."""
+
 from __future__ import annotations
 
 from collections.abc import Callable
@@ -13,8 +14,8 @@ from homeassistant.components.sensor import (
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
-    EntityCategory,
     SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
+    EntityCategory,
     UnitOfElectricCurrent,
     UnitOfElectricPotential,
     UnitOfEnergy,
@@ -78,20 +79,24 @@ def _mwh_to_kwh(raw: Any) -> float | None:
 
 def _passthrough(key: str) -> Callable[[dict[str, Any]], Any]:
     """Return a value_fn that just returns payload[key]."""
+
     def _fn(payload: dict[str, Any]) -> Any:
         return payload.get(key)
+
     return _fn
 
 
 def _ma_from(key: str) -> Callable[[dict[str, Any]], Any]:
     def _fn(payload: dict[str, Any]) -> Any:
         return _ma_to_a(payload.get(key))
+
     return _fn
 
 
 def _mwh_from(key: str) -> Callable[[dict[str, Any]], Any]:
     def _fn(payload: dict[str, Any]) -> Any:
         return _mwh_to_kwh(payload.get(key))
+
     return _fn
 
 
@@ -325,8 +330,7 @@ async def async_setup_entry(
         RUNTIME_COORDINATOR
     ]
     async_add_entities(
-        ChargePointSensor(coordinator, description)
-        for description in ALL_SENSORS
+        ChargePointSensor(coordinator, description) for description in ALL_SENSORS
     )
 
 

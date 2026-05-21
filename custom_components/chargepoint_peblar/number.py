@@ -1,4 +1,5 @@
 """Number entity to set the ChargePoint charge current limit (in amps)."""
+
 from __future__ import annotations
 
 import logging
@@ -51,9 +52,7 @@ async def async_setup_entry(
     else:
         max_amps = round(snapshot_ma / 1000.0, 1)
 
-    async_add_entities(
-        [ChargePointCurrentLimitNumber(coordinator, max_amps)]
-    )
+    async_add_entities([ChargePointCurrentLimitNumber(coordinator, max_amps)])
 
 
 class ChargePointCurrentLimitNumber(ChargePointEntity, NumberEntity):
@@ -90,7 +89,10 @@ class ChargePointCurrentLimitNumber(ChargePointEntity, NumberEntity):
 
     async def async_set_native_value(self, value: float) -> None:
         """PATCH a new ChargeCurrentLimit (in mA)."""
-        clamped = max(self._attr_native_min_value, min(self._attr_native_max_value, value))
+        clamped = max(
+            self._attr_native_min_value,
+            min(self._attr_native_max_value, value),
+        )
         if clamped != value:
             _LOGGER.warning(
                 "Requested %.2f A clamped to %.2f A (entity bounds %.1f-%.1f A)",

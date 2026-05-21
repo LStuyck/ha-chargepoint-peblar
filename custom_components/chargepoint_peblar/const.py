@@ -1,4 +1,5 @@
 """Constants for the ChargePoint (Peblar) local API integration."""
+
 from __future__ import annotations
 
 from datetime import timedelta

@@ -1,4 +1,5 @@
 """Binary sensor entities for the ChargePoint (Peblar) local API."""
+
 from __future__ import annotations
 
 from collections.abc import Callable
@@ -161,4 +162,3 @@ class ChargePointBinarySensor(ChargePointEntity, BinarySensorEntity):
     @property
     def is_on(self) -> bool | None:
         """Return the current binary state."""
-     

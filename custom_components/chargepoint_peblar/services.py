@@ -1,4 +1,5 @@
 """Services for the ChargePoint (Peblar) local API integration."""
+
 from __future__ import annotations
 
 import logging
@@ -7,7 +8,8 @@ from typing import Any
 import voluptuous as vol
 from homeassistant.core import HomeAssistant, ServiceCall
 from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
-from homeassistant.helpers import config_validation as cv, device_registry as dr
+from homeassistant.helpers import config_validation as cv
+from homeassistant.helpers import device_registry as dr
 
 from .api import ChargePointApiError
 from .const import (
@@ -36,9 +38,7 @@ AUTHORIZE_SCHEMA = vol.Schema(
 )
 
 
-def _resolve_runtime(
-    hass: HomeAssistant, call: ServiceCall
-) -> dict[str, Any]:
+def _resolve_runtime(hass: HomeAssistant, call: ServiceCall) -> dict[str, Any]:
     """Find the integration runtime for the targeted entry."""
     entry_id = call.data.get(ATTR_CONFIG_ENTRY_ID)
 
@@ -51,9 +51,7 @@ def _resolve_runtime(
         dev_reg = dr.async_get(hass)
         device = dev_reg.async_get(device_id)
         if device is None:
-            raise ServiceValidationError(
-                f"Unknown device_id: {device_id}"
-            )
+            raise ServiceValidationError(f"Unknown device_id: {device_id}")
         for eid in device.config_entries:
             if eid in hass.data.get(DOMAIN, {}):
                 entry_id = eid
@@ -89,9 +87,7 @@ async def _async_authorize(hass: HomeAssistant, call: ServiceCall) -> None:
     try:
         await coordinator.client.async_authorize_charge_session(method, token)
     except ChargePointApiError as err:
-        raise HomeAssistantError(
-            f"authorize_charge_session failed: {err}"
-        ) from err
+        raise HomeAssistantError(f"authorize_charge_session failed: {err}") from err
 
     # The API replies 202 and asks the caller to monitor session state. Kick
     # a refresh so HA picks up the new evinterface / system state ASAP.

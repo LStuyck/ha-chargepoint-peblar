@@ -1,4 +1,5 @@
 """Async client for the Peblar / ChargePoint local REST API."""
+
 from __future__ import annotations
 
 import asyncio
@@ -76,9 +77,7 @@ class ChargePointClient:
                     method, url, headers=headers, json=json
                 ) as resp:
                     if resp.status == 401:
-                        raise ChargePointAuthError(
-                            "Unauthorized - check the API token"
-                        )
+                        raise ChargePointAuthError("Unauthorized - check the API token")
                     if resp.status == 429:
                         raise ChargePointRateLimitError(
                             "Rate limit exceeded (5 req/s shared)"
@@ -91,7 +90,7 @@ class ChargePointClient:
                             msg = f"HTTP {resp.status}"
                         raise ChargePointApiError(msg)
                     return await resp.json()
-        except asyncio.TimeoutError as err:
+        except TimeoutError as err:
             raise ChargePointConnectionError(
                 f"Timeout talking to {self._host}"
             ) from err
@@ -114,17 +113,11 @@ class ChargePointClient:
 
     # --- Write endpoints ----------------------------------------------------
 
-    async def async_patch_evinterface(
-        self, payload: dict[str, Any]
-    ) -> dict[str, Any]:
+    async def async_patch_evinterface(self, payload: dict[str, Any]) -> dict[str, Any]:
         """PATCH /evinterface with a partial body."""
-        return await self._request(
-            "PATCH", ENDPOINT_EVINTERFACE, json=payload
-        )
+        return await self._request("PATCH", ENDPOINT_EVINTERFACE, json=payload)
 
-    async def async_authorize_charge_session(
-        self, method: str, token: str
-    ) -> None:
+    async def async_authorize_charge_session(self, method: str, token: str) -> None:
         """POST /authorization/charge-session. Returns None on 202 Accepted."""
         url = f"{self._base_url}/authorization/charge-session"
         headers = {
@@ -135,15 +128,11 @@ class ChargePointClient:
         body = {"Method": method, "Token": token}
         try:
             async with asyncio.timeout(API_TIMEOUT_SECONDS):
-                async with self._session.post(
-                    url, headers=headers, json=body
-                ) as resp:
+                async with self._session.post(url, headers=headers, json=body) as resp:
                     if resp.status == 202:
                         return
                     if resp.status == 401:
-                        raise ChargePointAuthError(
-                            "Unauthorized - check the API token"
-                        )
+                        raise ChargePointAuthError("Unauthorized - check the API token")
                     if resp.status == 403:
                         raise ChargePointApiError(
                             "Forbidden - request not allowed in managed mode "
@@ -157,7 +146,7 @@ class ChargePointClient:
                     except (ValueError, ClientResponseError):
                         msg = f"HTTP {resp.status}"
                     raise ChargePointApiError(msg)
-        except asyncio.TimeoutError as err:
+        except TimeoutError as err:
             raise ChargePointConnectionError(
                 f"Timeout talking to {self._host}"
             ) from err

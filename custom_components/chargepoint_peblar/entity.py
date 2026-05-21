@@ -1,4 +1,5 @@
 """Base entity for ChargePoint (Peblar) integration."""
+
 from __future__ import annotations
 
 from typing import Any
