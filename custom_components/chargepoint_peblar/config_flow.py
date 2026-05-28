@@ -71,7 +71,7 @@ class ChargePointConfigFlow(ConfigFlow, domain=DOMAIN):
                 errors["base"] = "cannot_connect"
             except ChargePointApiError:
                 errors["base"] = "unknown"
-            except Exception:  # noqa: BLE001 - defensive log path
+            except Exception:
                 _LOGGER.exception("Unexpected error validating charger")
                 errors["base"] = "unknown"
             else:
@@ -80,7 +80,9 @@ class ChargePointConfigFlow(ConfigFlow, domain=DOMAIN):
                     errors["base"] = "no_serial"
                 else:
                     await self.async_set_unique_id(serial)
-                    self._abort_if_unique_id_configured(updates={CONF_HOST: host})
+                    self._abort_if_unique_id_configured(
+                        updates={CONF_HOST: host}
+                    )
                     product = system.get("ProductPn") or "ChargePoint"
                     return self.async_create_entry(
                         title=f"{product} ({serial})",
@@ -126,7 +128,7 @@ class ChargePointConfigFlow(ConfigFlow, domain=DOMAIN):
                 errors["base"] = "cannot_connect"
             except ChargePointApiError:
                 errors["base"] = "unknown"
-            except Exception:  # noqa: BLE001 - defensive log path
+            except Exception:
                 _LOGGER.exception("Unexpected error during reauth")
                 errors["base"] = "unknown"
             else:
