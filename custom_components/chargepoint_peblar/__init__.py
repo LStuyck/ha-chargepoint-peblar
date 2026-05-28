@@ -99,7 +99,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 "title": entry.title,
             },
             learn_more_url=(
-                "https://github.com/LStuyck/ha-chargepoint-peblar" "#troubleshooting"
+                "https://github.com/LStuyck/ha-chargepoint-peblar#troubleshooting"
             ),
         )
 
