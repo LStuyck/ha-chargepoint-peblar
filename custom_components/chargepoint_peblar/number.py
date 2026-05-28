@@ -101,7 +101,7 @@ class ChargePointCurrentLimitNumber(ChargePointEntity, NumberEntity):
                 self._attr_native_min_value,
                 self._attr_native_max_value,
             )
-        ma = int(round(clamped * 1000))
+        ma = round(clamped * 1000)
         try:
             await self.coordinator.client.async_patch_evinterface(
                 {"ChargeCurrentLimit": ma}
